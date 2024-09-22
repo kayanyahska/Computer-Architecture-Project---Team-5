@@ -1,0 +1,67 @@
+1. Data Structures:
+symbolTable: A HashMap<String, Integer> for O(1) average-case lookup of label addresses.
+codeLocation: An integer acting as a program counter, tracking the current memory address.
+
+2. Pass One Method:
+public void passOne(String sourceFile) throws IOException {
+    try (BufferedReader reader = new BufferedReader(new FileReader(sourceFile))) {
+        // ... (code omitted for brevity)
+    }
+}
+
+
+I/O: Uses BufferedReader for efficient line-by-line reading of the source file.
+Try-with-resources ensures proper resource management and automatic closure of the reader.
+Complexity: O(n) where n is the number of lines in the source file.
+Key Operations:
+Label identification and storage in symbolTable.
+Instruction type recognition and memory allocation.
+
+3) Pass Two Method:
+public void passTwo(String sourceFile, String listingFile, String loadFile) throws IOException {
+    try (BufferedReader reader = new BufferedReader(new FileReader(sourceFile));
+         PrintWriter listingWriter = new PrintWriter(new FileWriter(listingFile));
+         PrintWriter loadWriter = new PrintWriter(new FileWriter(loadFile))) {
+        // ... (code omitted for brevity)
+    }
+}
+
+ I/O: Uses BufferedReader for input and PrintWriter for output.
+Concurrent file operations: Reads source file while writing to listing and load files.
+Complexity: O(n) where n is the number of lines in the source file.
+Key Operations:
+Instruction encoding via encodeInstruction method.
+Formatted output generation using String.format.
+Error handling with try-catch blocks for NumberFormatException.
+
+4) Instruction Encoding
+private int encodeInstruction(String opcode, String operands) {
+    // ... (code omitted for brevity)
+}
+
+- Bitwise Operations: Extensive use of bitwise OR (|) and left shift (<<) for instruction encoding.
+String Manipulation: Uses substring and split methods for operand parsing.
+Switch Statement: O(1) time complexity for opcode matching.
+Instruction-Specific Encoding:
+LDX: 0x102000 | (reg << 9) | address
+LDR: 0x000000 | (reg << 13) | (index << 9) | address | (indirect ? 0x000400 : 0)
+LDA: 0x006000 | (reg << 13) | (index << 9) | address
+JZ: 0x020000 | (reg << 9) | (index << 5) | address
+HLT: 0x000000
+
+Main Method:
+public static void main(String[] args) {
+    Assembler assembler = new Assembler();
+    // ... (code omitted for brevity)
+}
+
+- Exception Handling: Uses try-catch block for IOException, providing graceful error reporting.
+Single Responsibility: Each method (passOne, passTwo) handles a specific phase of the assembly process.
+Technical Considerations:
+1. Memory Usage: O(m) where m is the number of unique labels in the source code (for symbolTable).
+2. Time Complexity: O(n) where n is the number of lines in the source file (two passes, each O(n)).
+3. Instruction Encoding: Uses 32-bit integers for instruction representation.
+File I/O: Buffered reading and writing for improved performance.
+Error Handling: Specific handling for NumberFormatException during instruction parsing.
+Extensibility: The switch statement in encodeInstruction allows for easy addition of new instruction types.
+This implementation demonstrates a balance between memory efficiency (using a HashMap for label lookup) and time efficiency (linear time complexity for assembly process). The use of bitwise operations for instruction encoding ensures accurate and efficient machine code generation.
