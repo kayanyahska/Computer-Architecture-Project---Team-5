@@ -1,4 +1,8 @@
+package memory;
+
 import java.util.LinkedList;
+
+import util.Const;
 
 public class Test {
 
@@ -40,7 +44,7 @@ public class Test {
 	}
 
 	public void add(int address, int value) {
-		if (this.cacheLines.size() >= Constants.CACHE_LINES) {
+		if (this.cacheLines.size() >= Const.CACHE_LINES) {
 			this.cacheLines.removeLast();
 		}
 		this.cacheLines.addFirst(new CacheLine(address, value));
